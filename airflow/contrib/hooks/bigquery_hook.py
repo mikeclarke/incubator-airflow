@@ -133,6 +133,7 @@ class BigQueryPandasConnector(GbqConnector):
     service account credentials into the binding.
     """
     def __init__(self, project_id, service, reauth=False, verbose=False, dialect='legacy'):
+        super(BigQueryPandasConnector, self).__init__(project_id)
         gbq_check_google_client_version()
         gbq_test_google_api_imports()
         self.project_id = project_id
