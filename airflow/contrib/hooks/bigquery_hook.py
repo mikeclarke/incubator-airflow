@@ -27,6 +27,7 @@ from pandas_gbq.gbq import GbqConnector, \
     _parse_data as gbq_parse_data, \
     _check_google_client_version as gbq_check_google_client_version, \
     _test_google_api_imports as gbq_test_google_api_imports
+from pandas_gbq import read_gbq
 from pandas.tools.merge import concat
 from past.builtins import basestring
 
@@ -88,20 +89,13 @@ class BigQueryHook(GoogleCloudBaseHook, DbApiHook, LoggingMixin):
         :param dialect: Dialect of BigQuery SQL – legacy SQL or standard SQL
         :type dialect: string in {'legacy', 'standard'}, default 'legacy'
         """
-        service = self.get_service()
-        project = self._get_field('project')
-        connector = BigQueryPandasConnector(project, service, dialect=dialect)
-        schema, pages = connector.run_query(bql)
-        dataframe_list = []
+        if dialect is None:
+            dialect = 'legacy' if self.use_legacy_sql else 'standard'
 
-        while len(pages) > 0:
-            page = pages.pop()
-            dataframe_list.append(gbq_parse_data(schema, page))
-
-        if len(dataframe_list) > 0:
-            return concat(dataframe_list, ignore_index=True)
-        else:
-            return gbq_parse_data(schema, [])
+        return read_gbq(bql,
+                        project_id=self._get_field('project'),
+                        dialect=dialect,
+                        verbose=False)
 
     def table_exists(self, project_id, dataset_id, table_id):
         """
