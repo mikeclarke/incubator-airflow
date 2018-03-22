@@ -24,6 +24,15 @@ import warnings
 from builtins import object
 from contextlib import contextmanager
 
+try:
+    from raven.conf import setup_logging
+    from raven.handlers.logging import SentryHandler
+    handler = SentryHandler()
+    handler.setLevel(logging.ERROR)
+    setup_logging(handler)
+except ImportError:
+    warnings.warn('Skipping sentry logging integration configuration.')
+
 
 class LoggingMixin(object):
     """

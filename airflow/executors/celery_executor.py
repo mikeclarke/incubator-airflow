@@ -15,8 +15,11 @@
 import subprocess
 import time
 
-from celery import Celery
+import celery
 from celery import states as celery_states
+
+import raven
+from raven.contrib.celery import register_signal, register_logger_signal
 
 from airflow.config_templates.default_celery import DEFAULT_CELERY_CONFIG
 from airflow.exceptions import AirflowException
@@ -38,6 +41,23 @@ if configuration.has_option('celery', 'celery_config_options'):
     )
 else:
     celery_configuration = DEFAULT_CELERY_CONFIG
+
+
+'''
+Custom celery integartion supporting Sentry integration
+'''
+
+class Celery(celery.Celery):
+
+    def on_configure(self):
+        client = raven.Client()
+
+        # register a custom filter to filter out duplicate logs
+        register_logger_signal(client)
+
+        # hook into the Celery error handler
+        register_signal(client)
+
 
 app = Celery(
     configuration.get('celery', 'CELERY_APP_NAME'),

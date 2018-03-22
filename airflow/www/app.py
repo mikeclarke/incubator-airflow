@@ -31,6 +31,9 @@ from airflow import jobs
 from airflow import settings
 from airflow import configuration
 
+from raven.contrib.flask import Sentry
+sentry = Sentry()
+
 
 def create_app(config=None, testing=False):
     app = Flask(__name__)
@@ -38,6 +41,7 @@ def create_app(config=None, testing=False):
     app.config['LOGIN_DISABLED'] = not configuration.getboolean('webserver', 'AUTHENTICATE')
 
     csrf.init_app(app)
+    sentry.init_app(app)
 
     app.config['TESTING'] = testing
 
