@@ -92,7 +92,10 @@ class BigQueryHook(GoogleCloudBaseHook, DbApiHook, LoggingMixin):
         if dialect is None:
             dialect = 'legacy' if self.use_legacy_sql else 'standard'
 
+        key_path = self._get_field('key_path', False)
+
         return read_gbq(bql,
+                        private_key=key_path,
                         project_id=self._get_field('project'),
                         dialect=dialect,
                         verbose=False)
