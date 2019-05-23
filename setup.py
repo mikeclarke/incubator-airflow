@@ -99,7 +99,8 @@ def write_version(filename=os.path.join(*['airflow',
     with open(filename, 'w') as a:
         a.write(text)
 
-async = [
+
+async_packages = [
     'greenlet>=0.4.9',
     'eventlet>= 0.9.7',
     'gevent>=0.13'
@@ -180,7 +181,7 @@ devel = [
     'click',
     'freezegun',
     'jira',
-    'lxml>=3.3.4',
+    'lxml>=4.0.0',
     'mock',
     'moto==1.1.19',
     'nose',
@@ -225,7 +226,7 @@ def do_setup():
             'gitpython>=2.0.2',
             'gunicorn>=19.4.0, <20.0',
             'jinja2>=2.7.3, <2.9.0',
-            'lxml>=3.6.0, <4.0',
+            'lxml>=4.0.0',
             'markdown>=2.5.2, <3.0',
             'pandas>=0.17.1, <1.0.0',
             'psutil>=4.2.0, <5.0.0',
@@ -243,7 +244,7 @@ def do_setup():
         extras_require={
             'all': devel_all,
             'all_dbs': all_dbs,
-            'async': async,
+            'async': async_packages,
             'azure': azure,
             'celery': celery,
             'cgroups': cgroups,
