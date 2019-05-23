@@ -1,7 +1,13 @@
 # Updating Airflow
 
 This file documents any backwards-incompatible changes in Airflow and
-assists people when migrating to a new version.
+assists users migrating to a new version.
+
+## Airflow Master
+
+### Replace DataProcHook.await calls to DataProcHook.wait
+
+The method name was changed to be compatible with the Python 3.7 async/await keywords
 
 ## Airflow 1.9
 
